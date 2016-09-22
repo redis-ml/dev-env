@@ -1,0 +1,19 @@
+set nobackup
+set nowritebackup
+"set noswapfile
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set autoindent
+set smarttab
+set hlsearch
+set expandtab
+
+filetype indent on
+filetype on
+filetype plugin on
+
+"au BufNewFile,BufReadPost *.go setl noet
+
+execute pathogen#infect()
+

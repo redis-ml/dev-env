@@ -1,5 +1,14 @@
 #!/bin/bash
 
+
+CACHE_DIR=~/github-repo/downloads
+
+save_with_local_cache() {
+    local url=$1
+    local FN=$2
+    wget -N -c -O "$FN" "$url"
+}
+
 set -ex
 
 install_base() {
@@ -32,28 +41,6 @@ install_base() {
       libiberty-dev
 }
 
-install_folly_step1() {
-  #########################
-  echo install_folly_step1
-  pwd
-  [ -d folly ] || git clone https://github.com/facebook/folly.git
-
-  cd folly/folly
-
-    cd test/gtest-1.7.0
-    cmake CMakeLists.txt
-    make
-    cd -
-
-    autoreconf -ivf
-    ./configure
-    make clean
-    make
-    make check || echo "Small amounts of failure could be ignored, please check..."
-    sudo make install
-  cd ../..
-}
-
 install_libgtest() {
   echo install_libgtest
   pwd
@@ -64,13 +51,36 @@ install_libgtest() {
 
   cd googletest
 
+  git checkout -b release-1.7.0 release-1.7.0 || echo "falied"
+
   sudo cmake CMakeLists.txt
 
   sudo make
 
-  sudo cp *.a /usr/local/lib/
-  sudo cp -r include/gtest /usr/local/include/
+  sudo rsync *.a /usr/local/lib/
+  sudo rsync -a include/gtest /usr/local/include/
   cd -
+}
+install_folly() {
+  #########################
+  echo install_folly_step1
+  pwd
+  [ -d folly ] || git clone https://github.com/facebook/folly.git
+
+  TOP_DIR=$PWD
+  cd folly/folly
+
+    local DST_DIR=test/gtest-1.7.0
+    rm -f "${DST_DIR}"
+    ln -s $TOP_DIR/googletest $DST_DIR
+
+    autoreconf -ivf
+    ./configure
+    make clean
+    make
+    make check || echo "Small amounts of failure could be ignored, please check..."
+    sudo make install
+  cd ../..
 }
 
 install_proxygen_step1() {
@@ -83,7 +93,7 @@ install_proxygen_step1() {
   cd -
 }
 
-install_fbthrift() {
+install_fbthrift_py() {
   #########################
   [ -d fbthrift ] || git clone https://github.com/facebook/fbthrift.git
   pwd
@@ -111,21 +121,6 @@ install_wangle() {
   cd -
 }
 
-install_folly() {
-  [ -d folly ] || git clone https://github.com/facebook/folly.git
-  #########################
-  pwd
-  cd folly/folly
-    make clean
-    autoreconf -ivf
-    ./configure
-    make clean
-    make
-    make check || echo "it failed but doesn't matter"
-    sudo make install
-  cd -
-}
-
 install_proxygen() {
   [ -d proxygen ] || git clone https://github.com/facebook/proxygen.git
   #########################
@@ -144,7 +139,7 @@ install_proxygen() {
   cd -
 }
 
-install_fbthrift_thrift() {
+install_fbthrift() {
   [ -d fbthrift ] || git clone https://github.com/facebook/fbthrift.git
   #########################
   pwd
@@ -180,13 +175,14 @@ install_others() {
 main() {
   install_base
   install_libgtest
-  install_folly_step1
+  install_folly
   install_proxygen_step1
-  install_fbthrift
+  install_fbthrift_py
   install_wangle
+  // Install folly again.
   install_folly
   install_proxygen
-  install_fbthrift_thrift
+  install_fbthrift
   install_rocksdb
   install_others
   ########################
