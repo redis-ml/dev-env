@@ -51,7 +51,7 @@ install_libgtest() {
 
   cd googletest
 
-  git checkout -b release-1.7.0 release-1.7.0 || echo "falied"
+  git checkout release-1.7.0 || echo "falied"
 
   sudo cmake CMakeLists.txt
 
@@ -63,16 +63,19 @@ install_libgtest() {
 }
 install_folly() {
   #########################
-  echo install_folly_step1
+  echo install_folly
   pwd
   [ -d folly ] || git clone https://github.com/facebook/folly.git
 
   TOP_DIR=$PWD
   cd folly/folly
 
-    local DST_DIR=test/gtest-1.7.0
-    rm -f "${DST_DIR}"
-    ln -s $TOP_DIR/googletest $DST_DIR
+    cd test/
+    local DST_DIR=gtest-1.7.0
+    rm -rf "${DST_DIR}" "${DST_DIR}.zip"
+    rsync -az $TOP_DIR/googletest $DST_DIR
+    tar czf gtest-1.7.0.zip $DST_DIR
+    cd ../
 
     autoreconf -ivf
     ./configure
@@ -125,6 +128,7 @@ install_proxygen() {
   [ -d proxygen ] || git clone https://github.com/facebook/proxygen.git
   #########################
   pwd
+  TOP_DIR="$PWD"
   cd proxygen/proxygen
 
   rm -rf folly
@@ -132,20 +136,37 @@ install_proxygen() {
   rm -rf Makefile
   rm -rf config.log
   rm -rf config.status
+
+  # Copy gtest from folly
+  # download from "https://codeload.github.com/google/googlemock/zip/release-1.7.0"
+  perl -p -i -e 's#wget https://googlemock.googlecode.com/files/gmock-1.7.0.zip#wget https://codeload.github.com/google/googlemock/zip/release-1.7.0 -O gmock-1.7.0.zip' ./lib/test/Makefile.am
+  #rsync $TOP_DIR/folly/folly/test/gtest-1.7.0.zip lib/test/
+
   autoreconf -ivf
   ./configure
   ./reinstall.sh
 
-  cd -
+  cd ../../
 }
 
 install_fbthrift() {
+  sudo apt-get install make autoconf libtool g++ \
+    libboost-all-dev libevent-dev flex bison \
+    libgoogle-glog-dev libdouble-conversion-dev scons \
+    libkrb5-dev libsnappy-dev libsasl2-dev
   [ -d fbthrift ] || git clone https://github.com/facebook/fbthrift.git
+
+  # specific version
+  git checkout v2016.12.05.00
+
   #########################
   pwd
   cd fbthrift/thrift
 
-  autoreconf -if && ./configure && make
+  bash ./build/deps_ubuntu_14.04.sh
+  autoreconf -if && \
+    PY_PREFIX=/ ./configure --without-py && \
+    make
   sudo make install
 
   cd -
@@ -180,7 +201,6 @@ main() {
   install_fbthrift_py
   install_wangle
   // Install folly again.
-  install_folly
   install_proxygen
   install_fbthrift
   install_rocksdb

@@ -6,6 +6,13 @@ git_help() {
     echo -e "   git_commit : commit changes to previous commit\n\n"
 }
 
+git_fetch() {
+  git fetch
+}
+git_rebase() {
+  git rebase origin/master
+}
+
 git_push_to_remote() {
   git push origin HEAD:master
 }
