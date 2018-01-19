@@ -11,4 +11,3 @@ clear_docker_images() {
     docker rmi $F
   done
 }
-

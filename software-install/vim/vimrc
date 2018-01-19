@@ -9,6 +9,8 @@ set smarttab
 set hlsearch
 set expandtab
 
+syntax on
+
 filetype indent on
 filetype on
 filetype plugin on
