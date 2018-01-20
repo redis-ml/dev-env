@@ -1,9 +1,9 @@
 # AWS client enabled.
 
-FROM awscli:latest
+FROM ubuntu:latest
 
+RUN apt-get update
 RUN apt-get install -y python-pip vim
-RUN pip install awscli
 
 # Deprecated.
 # Docker not work inside containder.
