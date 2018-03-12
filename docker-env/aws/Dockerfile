@@ -1,6 +1,6 @@
 # AWS client enabled.
 
-FROM awscli:latest
+FROM awsbase:latest
 
 RUN apt-get install -y python-pip vim
 RUN pip install awscli

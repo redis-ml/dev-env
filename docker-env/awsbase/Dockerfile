@@ -3,7 +3,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update
-RUN apt-get install -y python-pip vim
+RUN apt-get install -y python-pip vim groff
 
 # Deprecated.
 # Docker not work inside containder.
