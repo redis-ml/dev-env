@@ -6,6 +6,7 @@ RUN \
   apt-get update && \
   apt-get install -y \
     python-pip vim groff curl \
+    fabric \
     apt-transport-https ca-certificates software-properties-common
 RUN \
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
