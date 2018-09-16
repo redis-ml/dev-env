@@ -3,16 +3,25 @@
 FROM ubuntu:latest
 
 RUN \
-  apt-get update && \
-  apt-get install -y \
-    python-pip vim groff curl \
-    fabric \
-    apt-transport-https ca-certificates software-properties-common
+  DEBIAN_FRONTEND='noninteractive' apt-get update && \
+  DEBIAN_FRONTEND='noninteractive' apt-get install -y \
+    vim groff curl \
+    apt-transport-https ca-certificates software-properties-common \
+    build-essential git libreadline-dev zlib1g-dev libssl-dev libbz2-dev libsqlite3-dev
+
+# Add Docker repo
 RUN \
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
-  apt-get update && \
-  apt-get install -y docker-ce
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# Install Docker
+RUN \
+  DEBIAN_FRONTEND='noninteractive' apt-get update && \
+  DEBIAN_FRONTEND='noninteractive' apt-get install -y docker-ce
+
+RUN curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+RUN PATH=/root/.pyenv/shims:/root/.pyenv/bin:$PATH pyenv install 3.6.6
+RUN PATH=/root/.pyenv/shims:/root/.pyenv/bin:$PATH pyenv install 2.7.15
 
 # overwrite this with 'CMD []' in a dependent Dockerfile
 CMD ["/bin/bash"]
