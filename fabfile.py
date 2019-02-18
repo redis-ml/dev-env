@@ -32,9 +32,9 @@ def push_fawkes_docker(c, app_version = 'latest'):
 def push_docker(c, app_name, endpoint, app_version = 'latest'):
     docker_registry = endpoint_to_docker_registry(endpoint)
     cmd = 'docker tag %s:%s %s/%s:%s' % (app_name, app_version, docker_registry, app_name, app_version)
-    local_run(cmd)
+    c.run(cmd)
     cmd = 'docker push %s/%s:%s' % (docker_registry, app_name, app_version)
-    local_run(cmd)
+    c.run(cmd)
 
 @task
 def aws_ecr_login(c):
@@ -83,6 +83,7 @@ docker run \
   -d --restart unless-stopped \
   {linked_svc_param} \
   --name {name} \
+  --log-opt max-size=64k --log-opt max-file=5 \
   -v {HOME}/shared/linux/opt:/opt \
   -v {HOME}/shared/:/shared/ \
   -v {HOME}/:/host-home/ \
@@ -102,6 +103,19 @@ docker run \
         extra_params = extra_params,
         container_image = container_image,
         ))
+
+@task
+def run_docker(c, name, args):
+    cleanup_docker_container(c, name)
+    c.run("""
+    docker run \
+            -d \
+            --restart unless-stopped \
+            --name %s \
+            --log-opt max-size=64k --log-opt max-file=5 \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            %s
+    """ % (name, name, args))
 
 @task
 def cleanup_docker_container(c, container_name):
