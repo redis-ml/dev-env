@@ -3,7 +3,7 @@
 
 GOROOT="$(go env GOROOT 2>/dev/null)"
 
-if [ "$GOROOT" == "" ]; then
+if [ "$GOROOT" = "" ]; then
   export GOROOT=/usr/local/opt/go/libexec
 fi
 
