@@ -90,7 +90,7 @@ docker run \
   -v {HOME}/github/:/root/github/ \
   -v {HOME}/secure/aws.redis/aws:/root/.aws \
   -v {HOME}/secure/private/ssh:/root/.ssh \
-  -v {HOME}/secure/private/root:/root \
+  -v {HOME}/data/private/root/envs:/root/envs \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -w /root \
   {extra_params} \
@@ -123,6 +123,8 @@ def cleanup_docker_container(c, container_name):
     if not result.ok:
         raise Exception('failed to query docker containers')
     for line in result.stdout.strip().split("\n"):
+        if line == '':
+            continue
         l = line.split(' ', 1)
         if l[1] != container_name:
             continue
