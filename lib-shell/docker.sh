@@ -32,4 +32,4 @@ docker_mysql() {
 
 }
 
-docker_mysql
+# docker_mysql
