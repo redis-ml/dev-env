@@ -7,6 +7,11 @@ if [ "$GOROOT" = "" ]; then
   export GOROOT=/usr/local/opt/go/libexec
 fi
 
+GOPATH="$(go env GOPATH 2>/dev/null)"
+if [ "$GOPATH" = "" ]; then
+  GOPATH="$(cd ~/go;pwd)"
+fi
+
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 go_install() {
