@@ -17,5 +17,5 @@ filetype plugin on
 
 "au BufNewFile,BufReadPost *.go setl noet
 
-execute pathogen#infect()
+"execute pathogen#infect()
 

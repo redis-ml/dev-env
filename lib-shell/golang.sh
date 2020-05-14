@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export GO111MODULE=on
 
 GOROOT="$(go env GOROOT 2>/dev/null)"
 
