@@ -35,3 +35,17 @@ git_repo_clone() {
     fi
     popd
 }
+
+# This is very slow in Monorepo.
+#export GIT_PS1_SHOWDIRTYSTATE=1
+
+# this relies on git-prompt.sh
+# 
+[ -f $MY_ENV_SCRIPT_DIR/git-prompt.sh ] \
+  || curl -L \
+    https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh \
+    > $MY_ENV_SCRIPT_DIR/git-prompt.sh 
+# I'm using 'bash_it_theme/mingzhu.theme.bash' instead.
+# export PS1='\w$(__git_ps1 " (%s)")\$ '
+
+export EDITOR=vim

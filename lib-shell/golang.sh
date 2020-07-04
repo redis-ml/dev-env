@@ -17,3 +17,7 @@ go_run() {
   go run ${MY_PACKAGE_NAME}/$SUB
 }
 
+GO_BIN_PATH="$(go env GOPATH)/bin"
+( echo $PATH | fgrep "$GO_BIN_PATH:" 2>&1 >/dev/null ) || {
+  which go >/dev/null 2>/dev/null && export PATH="$(go env GOPATH)/bin:$PATH"
+}
