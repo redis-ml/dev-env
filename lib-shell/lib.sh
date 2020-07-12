@@ -17,3 +17,5 @@ else
   echo "exiting without anything"
 fi
 
+# Make sure MacPorts is in local path
+export PATH="$HOME/local/bin:$PATH"
