@@ -19,3 +19,7 @@ fi
 
 # Make sure MacPorts is in local path
 export PATH="$HOME/local/bin:$PATH"
+
+# Tool func to quickly get into this dicrectory
+alias cd_dev_env_tools="cd $MY_ENV_SCRIPT_DIR"
+
