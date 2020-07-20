@@ -3,7 +3,6 @@
 source "$(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh"
 
 # Customized aliases
-export MY_ENV_SCRIPT_DIR="$HOME/Documents/code/dev-env/lib-shell"
 source $MY_ENV_SCRIPT_DIR/lib.sh
 
 # Following content was from bash-it "bobby" theme
