@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export EDITOR=vim
+
 git_help() {
     echo -e "Use the following command for git operations:\n\n"
     echo -e "   git_push_to_remote : push local branch changes to remote\n\n"
@@ -48,4 +50,8 @@ git_repo_clone() {
 # I'm using 'bash_it_theme/mingzhu.theme.bash' instead.
 # export PS1='\w$(__git_ps1 " (%s)")\$ '
 
-export EDITOR=vim
+git_submodule_update() {
+  git submodule foreach --recursive git clean -xfd
+  git submodule foreach --recursive git reset --hard
+  git submodule update --init --recursive
+}
