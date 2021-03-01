@@ -23,6 +23,10 @@ git_commit() {
   git commit --amend "$@"
 }
 
+git_prune_tags() {
+  git fetch --prune origin '+refs/tags/*:refs/tags/*'
+}
+
 git_repo_clone() {
     local url=${1?}
     local release=${2:-unset}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DOCKER_BUILDKIT=1
+
 clear_docker_containers() {
   docker ps -aqf status=exited | xargs -I {} docker rm {}
 }
