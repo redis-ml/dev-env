@@ -5,6 +5,13 @@
 VAGRANT_BOX = 'ubuntu/focal64'
 # Memorable name for your
 VM_NAME = 'ubuntu20sec'
+# Username on your Mac
+HOST_USER = Etc.getlogin
+# Host folder to sync
+HOST_HOME_PATH = Dir.home
+
+# Where to sync to on Guest — 'vagrant' is the default user name
+GUEST_HOME_PATH = File.join '/home/', VM_USER
 
 PASSWORD_PATH = ".password"
 PASSWORD_ID_PATH = ".password_id"
@@ -62,4 +69,16 @@ Vagrant.configure("2") do |config|
 
   # Port forwarding — uncomment this to use NAT instead of DHCP
   # config.vm.network "forwarded_port", guest: 80, host: VM_PORT
+
+  # Sync folder
+  # Secrets
+  config.vm.synced_folder File.join(HOST_HOME_PATH, '.secret'), File.join(GUEST_HOME_PATH, '.secret')
+  # Shared code
+  config.vm.synced_folder File.join(HOST_HOME_PATH, 'shared'), File.join(GUEST_HOME_PATH, 'shared')
+  # Shared data
+  config.vm.synced_folder File.join(HOST_HOME_PATH, 'data'), File.join(GUEST_HOME_PATH, 'data')
+  # Code
+  config.vm.synced_folder File.join(HOST_HOME_PATH, 'code'), File.join(GUEST_HOME_PATH, 'code')
+  # Also share entire home dir just in case.
+  config.vm.synced_folder HOST_HOME_PATH, '/host/'
 end
