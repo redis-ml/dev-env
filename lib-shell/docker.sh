@@ -2,15 +2,15 @@
 
 export DOCKER_BUILDKIT=1
 
-clear_docker_containers() {
+function clear_docker_containers() {
   docker ps -aqf status=exited | xargs -I {} docker rm {}
 }
 
-clear_docker_images() {
+function clear_docker_images() {
   docker images -qf "dangling=true" -q | xargs -I {} docker rmi {}
 }
 
-docker_purge_container() {
+function docker_purge_container() {
   NAME=${1?docker name}
   docker ps \
     -a \
@@ -20,7 +20,7 @@ docker_purge_container() {
     '$2==name{system("docker stop "$1" && docker rm "$1)}'
 }
 
-docker_mysql() {
+function docker_mysql() {
 
   # When initiating use the following parameter termplate to specify root password.
   #  -e MYSQL_ROOT_PASSWORD="<generated root password>" \
@@ -32,6 +32,10 @@ docker_mysql() {
     mysql:8.0 \
     --default-authentication-plugin=mysql_native_password \
 
+}
+
+function docker_clean_build_cache() {
+  docker builder prune
 }
 
 # docker_mysql

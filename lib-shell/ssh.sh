@@ -1,7 +1,7 @@
 #!/bin/bash
 export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=YES
 
-usage() {
+function my_usage() {
     echo "Usage:"
     echo "      sh ~/ssh.sh <host ip or config name> [category]"
     echo "      sh ~/scp.sh <src_dir> <dest_dir> <host ip or config name> [category]"
@@ -21,7 +21,7 @@ usage() {
     echo "  'remote' is a keyword of this script which will be replaced later."
 }
 
-parse_arg() {
+function parse_arg() {
   case $1 in
       default)
           MY_HOST=127.0.0.1

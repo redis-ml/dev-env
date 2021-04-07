@@ -1,4 +1,4 @@
 
-switch_to_homebrew_bash() {
+function switch_to_homebrew_bash() {
   export SHELL="$(brew --prefix)/bin/bash"
 }

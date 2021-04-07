@@ -4,6 +4,6 @@ if [ -f $HOME/.poetry/env ]; then
   . $HOME/.poetry/env
 fi
 
-format_code() {
+function format_code() {
   black -S -l 79 .
 }

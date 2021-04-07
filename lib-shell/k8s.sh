@@ -1,10 +1,10 @@
-if [ "$MY_LIB_K8S_DEFINED" = "" ]; then
-  export MY_LIB_K8S_DEFINED=1
-  source "$(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh"
-  # export PS1='$(kube_ps1)'$PS1
-fi
+# if [ "$MY_LIB_K8S_DEFINED" = "" ]; then
+#   export MY_LIB_K8S_DEFINED=1
+#   source "$(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh"
+#   # export PS1='$(kube_ps1)'$PS1
+# fi
 
-switch_k8s_namespace() {
+function switch_k8s_namespace() {
   local ns=${1?namespace}
   kubectl config \
     set-context \
@@ -12,13 +12,13 @@ switch_k8s_namespace() {
     --namespace="$ns"
 }
 
-switch_k8s_context() {
+function switch_k8s_context() {
   local ctxt=${1?context name}
   kubectl config \
     use-context "${ctxt}"
 }
 
-k8s_churn_role() {
+function k8s_churn_role() {
   local role=${1?role}
   shift
 
@@ -41,12 +41,12 @@ k8s_churn_role() {
   $kubectl_cmd delete $all_pods
 }
 
-k8s_search_ip() {
+function k8s_search_ip() {
   local ip=${1?ip}
   kubectl get pods --field-selector status.podIP="$ip"  --all-namespaces
 }
 
-k8s_ssh() {
+function k8s_ssh() {
   local role="${1?role}"
   local kubectl_cmd="kubectl"
 

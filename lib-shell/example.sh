@@ -1,4 +1,4 @@
-my_examples() {
+function my_examples() {
   echo "
 # Tmux cmd
 tmux -CC new -A -s main

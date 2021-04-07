@@ -2,6 +2,6 @@
 
 export ANSIBLE_INVENTORY="~/ansible/inventory/consul.py"
 
-ansible_inventory() {
+function ansible_inventory() {
   ansible-inventory -i $ANSIBLE_INVENTORY --list "$@"
 }
