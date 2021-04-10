@@ -9,6 +9,7 @@ VM_NAME = 'ubuntu20sec'
 HOST_USER = Etc.getlogin
 # Host folder to sync
 HOST_HOME_PATH = Dir.home
+VM_USER = 'vagrant'
 
 # Where to sync to on Guest — 'vagrant' is the default user name
 GUEST_HOME_PATH = File.join '/home/', VM_USER
