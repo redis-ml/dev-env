@@ -1,0 +1,59 @@
+{
+    "name": "awesome-babylon-starter",
+    "version": "1.0.0",
+    "description": "Starter template for Babylon.js projects using Webpack, TypeScript, Babel, Sass and PUG.",
+    "scripts": {
+        "build": "webpack --config webpack.config.prod.js --progress --profile --colors",
+        "start": "webpack serve --config webpack.config.dev.js --inline --hot --open",
+        "type-check": "tsc --noEmit",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "Brian Hay ",
+        "email": "brian@virtualrealms.com.au"
+    },
+    "main": "dist/bundle.js",
+    "types": "dist/types/index.d.ts",
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/core": "^7.12.16",
+        "@babel/plugin-proposal-class-properties": "^7.12.13",
+        "@babel/plugin-proposal-export-default-from": "^7.12.13",
+        "@babel/plugin-proposal-object-rest-spread": "^7.12.13",
+        "@babel/preset-env": "^7.12.16",
+        "@babel/preset-typescript": "^7.12.16",
+        "babel-loader": "^8.2.2",
+        "clean-webpack-plugin": "^3.0.0",
+        "copy-webpack-plugin": "^7.0.0",
+        "css-loader": "^5.0.2",
+        "fork-ts-checker-webpack-plugin": "^6.1.0",
+        "html-loader": "^2.0.0",
+        "html-webpack-plugin": "^5.1.0",
+        "node-sass": "^5.0.0",
+        "pug-html-loader": "^1.1.5",
+        "sass-loader": "^11.0.1",
+        "string-replace-loader": "^3.0.1",
+        "style-loader": "^2.0.0",
+        "ts-loader": "^8.0.17",
+        "typescript": "^4.1.5",
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "webpack": "^5.22.0",
+        "webpack-cli": "^4.5.0",
+        "webpack-dev-server": "^3.11.2",
+        "webpack-merge": "^5.7.3"
+    },
+    "resolutions": {
+        "terser": "3.14.1"
+    },
+    "dependencies": {
+        "@babylonjs/core": "^4.2.0",
+        "@babylonjs/gui": "^4.2.0",
+        "@babylonjs/inspector": "^4.2.0",
+        "@babylonjs/loaders": "^4.2.0",
+        "@babylonjs/materials": "^4.2.0",
+        "@babylonjs/post-processes": "^4.2.0",
+        "@babylonjs/procedural-textures": "^4.2.0",
+        "@babylonjs/serializers": "^4.2.0",
+        "@types/react": "^17.0.2"
+    }
+}
