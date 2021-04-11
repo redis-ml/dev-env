@@ -5,6 +5,11 @@
     <div id="gallery"></div>
   </body>
   <script type="application/javascript">
+    let asset_folders = ["card_side_image_asset_v2", "card_side_image_asset"];
+    let sizes = ['1x', '1.5x', '2x', '3x'];
+    let colors = ['green', 'red'];
+    let platforms = ['android', 'ios'];
+
     var get_image_url = function(asset_folder, platform, id, color, size) {
       return [
         'https://cdn.robinhood.com',
@@ -31,13 +36,6 @@
         v = id_component.value;
       }
 
-      let asset_folders = ["card_side_image_asset_v2", "card_side_image_asset"];
-      let sizes = ['1x', '1.5x', '2x', '3x'];
-      let colors = ['green', 'red'];
-      let platforms = ['android', 'ios'];
-
-      var images = [];
-
       var table = document.createElement('table');
 
       var header = document.createElement('tr');
@@ -56,7 +54,6 @@
           platforms.forEach(platform => {
             colors.forEach(color => {
               var image_url = get_image_url(folder, platform, v, color, size);
-              images.push(image_url);
 
               if (!is_header_done) {
                 append_cell(header, 'th', [platform, folder, color].join(' '));
@@ -73,11 +70,7 @@
         is_header_done = true;
       });
 
-      let u = images;
-
-      let g = document.getElementById("gallery");
-      // g.innerHTML = u.flat().flat().map(uu => '<img src="' + uu + '"/>').join("<br/>");
-      g.appendChild(table);
+      document.getElementById("gallery").appendChild(table);
     };
     var register_action = function() {
       var b = document.getElementById("submit");
