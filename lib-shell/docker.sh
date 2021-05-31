@@ -39,3 +39,7 @@ function docker_clean_build_cache() {
 }
 
 # docker_mysql
+
+function start_local_docker_registry() {
+  docker run -d -p 5000:5000 --restart=always --name registry registry:2
+}
