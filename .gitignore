@@ -1,5 +1,7 @@
 .*
 *.pyc
 
+/bazel-*
+
 # exceptions
 !.git*

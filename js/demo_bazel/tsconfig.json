@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        // "allowSyntheticDefaultImports": true,
+        // "noFallthroughCasesInSwitch": true,
+        // "noUnusedParameters": true,
+        // "noImplicitReturns": true,
+        // "esModuleInterop": true,
+        // "noUnusedLocals": false,
+        // "noImplicitAny": true,
+        // "declarationDir": "dist/types",
+        // "target": "ESNext",
+        // "module": "ESNext",
+        // "strict": true,
+        "moduleResolution": "node",
+        // "resolveJsonModule": true
+        // "explainFiles": true,
+        // "declaration": true,
+        "lib": [
+            "ES2015",
+            "DOM"
+        ],
+        // See https://github.com/bazelbuild/rules_nodejs/blob/700b7a3c5f97f2877320e6e699892ee706f85269/packages/typescript/index.bzl#L111
+        "rootDirs": [
+          ".",
+          "../../bazel-out/host/bin/js/demo_bazel",
+          "../../bazel-out/aarch64-fastbuild/bin/js/demo_bazel",
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "dist"
+    ]
+}
