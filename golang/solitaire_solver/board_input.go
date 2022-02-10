@@ -7,7 +7,8 @@ import (
   "strconv"
 )
 
-func (b *Board) UpdateCardFromInput(scanner *bufio.Scanner) {
+func (b *Board) UpdateCardFromInput() {
+  scanner := b.Scanner
   scanner.Scan()
   line := scanner.Text()
   fmt.Printf("got input: %s.\n", line)
@@ -37,7 +38,7 @@ func (b *Board) UpdateCardFromInput(scanner *bufio.Scanner) {
   x := Must(strconv.Atoi(strings.TrimSpace(l[0])))
   y := Must(strconv.Atoi(strings.TrimSpace(l[1])))
 
-  b.SetPileCard(x, y, CardFromString(l[2]))
+  b.SetPileCard(x, y, CardFromString(l[2]), true)
 }
 
 func (b *Board) HasPendingCard() bool {
@@ -54,14 +55,22 @@ func (b *Board) HasPendingCard() bool {
   return false
 }
 
-func (b *Board) SetPileCard(x int, y int, card Card) bool {
+func (b *Board) SetPileCard(x int, y int, card Card, revealed bool) bool {
   gameCard := b.Piles[x][y]
   if gameCard.Card != nil {
     fmt.Printf("[ERROR], (%d, %d) is already assigned to %s, While you're trying to assign to %s\n", x, y, gameCard.Card, card)
     return false
   }
   gameCard.Card = &card
-  fmt.Printf("(%d, %d) -> %s\n", x, y, card)
+
+  if revealed {
+    gameCard.Reveal()
+  } else {
+    gameCard.Unreveal()
+  }
+
+  fmt.Printf("(%d, %d) -> %s, revealed: %v, %v\n", x, y, card, revealed, gameCard.IsRevealed())
+
   b.Piles[x][y] = gameCard
   return true
 }

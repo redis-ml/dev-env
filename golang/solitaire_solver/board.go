@@ -1,17 +1,63 @@
 package solitaire_solver
 
 import (
+  "bufio"
   "fmt"
+  "strings"
 )
 
 type Board struct {
   Stack map[CardType]Card
   Stock []Card
+  Hand []Card
   Waste []Card
   Piles [][]GameCard
+  Scanner *bufio.Scanner
 }
 
-func NewBoard() *Board {
+func writeString(cards []Card, sb *strings.Builder) {
+  for _, c := range cards {
+    sb.WriteString(c.String())
+  }
+  sb.WriteString(";")
+}
+
+func (b Board) String() string {
+  sb := new(strings.Builder)
+
+  // Write Stack ("Foundation")
+  for _, c := range AllCardTypes {
+    top, ok := b.Stack[c]
+    if ok {
+      sb.WriteString(top.String())
+    } else {
+      sb.WriteString("x")
+    }
+    sb.WriteString(",")
+  }
+  sb.WriteString(";")
+
+  writeString(b.Stock, sb)
+  writeString(b.Hand, sb)
+  writeString(b.Waste, sb)
+
+  // Write Piles ("Tableau")
+  for _, pile := range b.Piles {
+    for _, c := range pile {
+      if c.IsRevealed() {
+        sb.WriteString(c.Card.String())
+      } else {
+        sb.WriteString("x")
+      }
+    }
+    sb.WriteString(";")
+  }
+
+  return sb.String()
+
+}
+
+func NewBoard(scanner *bufio.Scanner) *Board {
   piles := make([][]GameCard, 7)
   for i := 0; i < 7; i++ {
     piles[i] = make([]GameCard, 0, i+1)
@@ -25,6 +71,7 @@ func NewBoard() *Board {
     Stock: []Card{},
     Waste: nil,
     Piles: piles,
+    Scanner: scanner,
   }
   return ret
 }
@@ -37,10 +84,25 @@ func (b *Board) Print() {
     fmt.Printf("%2d ", i)
     fmt.Printf("%s\n", pile)
   }
+  fmt.Printf("%s\n", b.String())
 }
 
-func (b *Board) SavePileCardToStack(x int, y int) bool {
-   gameCard := b.Piles[x][y]
+func (b *Board) PopStack(cardType CardType) *Card { 
+  card, ok := b.Stack[cardType]
+  if !ok {
+    return nil
+  }
+  if card.Number == 0 {
+    delete(b.Stack, cardType)
+  } else {
+    b.Stack[cardType] = NewCard(cardType, card.Number - 1)
+  }
+
+  return &card
+}
+
+func (b *Board) SavePileCardToStack(x int) bool {
+   gameCard, y := b.GetPileTailCard(x)
    if gameCard.Card == nil {
      return false
    }
@@ -50,7 +112,9 @@ func (b *Board) SavePileCardToStack(x int, y int) bool {
      return false
    }
    // action
-   return b.SaveToStack(card)
+   b.Piles[x] = b.Piles[x][0:y]
+   b.Stack[card.Type] = card
+   return true
 }
 
 func (b *Board) BorrowFromStack(cardType CardType) (Card, bool) {
@@ -58,10 +122,6 @@ func (b *Board) BorrowFromStack(cardType CardType) (Card, bool) {
    return card, ok
 }
 
-func (b *Board) SaveToStack(card Card) bool {
-   b.Stack[card.Type] = card
-   return true
-}
 
 func (b *Board) CanSaveToStack(card Card) bool {
     topCard, ok := b.Stack[card.Type]
@@ -71,7 +131,6 @@ func (b *Board) CanSaveToStack(card Card) bool {
       return card.Number == topCard.Number + 1
     }
 }
-
 
 func (b *Board) MovePiles(x int, y int, toPile int) bool {
   if !b.CanMovePiles(x, y, toPile) {
@@ -83,20 +142,55 @@ func (b *Board) MovePiles(x int, y int, toPile int) bool {
   return true
 }
 
-func (b *Board) CanMovePiles(x int, y int, toPile int) bool {
-    gameCard := b.Piles[x][y]
-    if gameCard.Card == nil {
-      return false
-    }
-
+func (b *Board) CanMoveToPile(src Card, toPile int) bool {
     if len(b.Piles[toPile]) == 0 {
       // case 1
-      return gameCard.Card.IsK()
+      return src.IsK()
     } else {
-      pile := b.Piles[toPile]
-      dest := pile[len(pile) - 1]
-      return gameCard.Card.Number + 1 == dest.Card.Number &&
-        gameCard.Card.Color() != dest.Card.Color()
+      dest, _ := b.GetPileTailCard(toPile)
+      return src.Number + 1 == dest.Card.Number &&
+        src.Color() != dest.Card.Color()
     }
 }
 
+func (b *Board) CanMovePiles(x int, y int, toPile int) bool {
+    gameCard := b.GetPileCard(x, y)
+    if gameCard.Card == nil {
+      return false
+    }
+    return b.CanMoveToPile(*gameCard.Card, toPile)
+}
+
+func (b *Board) GetPileTailCard(x int) (GameCard, int) {
+  for {
+    pile := b.Piles[x]
+    y := len(pile) - 1
+    card := b.GetPileCard(x, y)
+    // Validate card.
+    if card.Card == nil {
+      b.Print()
+      fmt.Printf("Need to know card at position (%d, %d)\n", x, y)
+      b.UpdateCardFromInput()
+      continue
+    }
+
+    return card, y
+  }
+}
+
+func (b *Board) GetPileCard(x int, y int) GameCard {
+    gameCard := b.Piles[x][y]
+    // TODO: check and ask for input if the card is unknown.
+    return gameCard
+}
+
+func (b *Board) Done() bool {
+  for _, cardType := range AllCardTypes {
+    card, ok := b.Stack[cardType]
+    if !ok || !card.IsK() {
+      return false
+    }
+  }
+  return true
+
+}

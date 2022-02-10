@@ -68,6 +68,7 @@ func (c *Card) Color() string {
 }
 
 type GameCard struct {
+  isRevealed bool
   Card *Card
 }
 
@@ -75,7 +76,22 @@ func (gc GameCard) String() string {
   if gc.Card == nil {
     return "-X-"
   }
+  if !gc.IsRevealed() {
+    return "_" + gc.Card.String() + "_"
+  }
   return gc.Card.String()
+}
+
+func (gc GameCard) IsRevealed() bool {
+  return gc.isRevealed
+}
+
+func (gc *GameCard) Reveal() {
+  gc.isRevealed = true
+}
+
+func (gc *GameCard) Unreveal() {
+  gc.isRevealed = false
 }
 
 func NewCard(cardType CardType, number int) Card {

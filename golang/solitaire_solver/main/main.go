@@ -9,16 +9,21 @@ import (
 )
 
 func main() {
-  b := solitaire_solver.NewBoard()
-  fmt.Println("Hello Worldle!")
   scanner := bufio.NewScanner(os.Stdin)
 
-  b.Print()
-  for {
-    for b.HasPendingCard() {
-      b.UpdateCardFromInput(scanner)
-      b.Print()
-    }
-    b.HandleCommand(scanner)
+  b := solitaire_solver.NewBoard(scanner)
+  d := &solitaire_solver.Driver {
+    Scanner: scanner,
+    Board: b,
   }
+  fmt.Println("Hello Worldle!")
+
+  b.Print()
+  for b.HasPendingCard() {
+    b.UpdateCardFromInput()
+    b.Print()
+  }
+  ret := d.Solve(nil, map[string]bool{})
+  d.Board.Print()
+  fmt.Printf("result: %v\n", ret)
 }
