@@ -9,28 +9,27 @@ import (
 
 func (b *Board) UpdateCardFromInput() {
   scanner := b.Scanner
-  scanner.Scan()
+  if !scanner.Scan() {
+    panic("EOF")
+  }
   line := scanner.Text()
   fmt.Printf("got input: %s.\n", line)
+  b.UpdateCardByString(line)
+}
 
-  l := strings.Split(line, ",")
+func (b *Board) UpdateCardByString(line string) {
+  l := strings.Split(strings.TrimSpace(line), ",")
   if len(l) < 2 {
     fmt.Printf("[WARN] invalid input %s\n", line)
     return
   }
 
-  if l[0] == "stock" {
-    // Special logic for updating the Stock
-    var stock []Card
-    for i, s := range l {
-      if i == 0 {
-        continue
-      }
-      stock = append(stock, CardFromString(s))
-    }
-    b.Waste = nil
-    b.Stock = stock
-
+  switch l[0] {
+  case "stock":
+    b.Stock = CardsFromStringArray(l[1:len(l)])
+    return
+  case "waste":
+    b.Waste = CardsFromStringArray(l[1:len(l)])
     return
   }
 

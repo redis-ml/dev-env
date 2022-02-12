@@ -9,11 +9,14 @@ import (
 type Board struct {
   Stack map[CardType]Card
   Stock []Card
-  Hand []Card
   Waste []Card
   Piles [][]GameCard
   Scanner *bufio.Scanner
 }
+
+type UndoFunc func()
+
+func EmptyUndoFunc() {}
 
 func writeString(cards []Card, sb *strings.Builder) {
   for _, c := range cards {
@@ -38,7 +41,6 @@ func (b Board) String() string {
   sb.WriteString(";")
 
   writeString(b.Stock, sb)
-  writeString(b.Hand, sb)
   writeString(b.Waste, sb)
 
   // Write Piles ("Tableau")

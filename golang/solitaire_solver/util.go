@@ -7,3 +7,11 @@ func Must(x int, e error) int {
   return x
 }
 
+func CardsFromStringArray(l []string) []Card {
+    var cards []Card
+    for _, s := range l {
+      cards = append(cards, CardFromString(s))
+    }
+    return cards
+}
+
