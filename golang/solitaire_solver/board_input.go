@@ -7,13 +7,24 @@ import (
   "strconv"
 )
 
-func (b *Board) UpdateCardFromInput() {
+func (b *Board) GetInput(prompt string) string {
+  fmt.Printf(">>> %s\n>", prompt)
   scanner := b.Scanner
   if !scanner.Scan() {
     panic("EOF")
   }
-  line := scanner.Text()
+  line := strings.TrimSpace(scanner.Text())
   fmt.Printf("got input: %s.\n", line)
+  return line
+}
+
+func (b *Board) GetCardFromInput(prompt string) (Card, bool) {
+  line := b.GetInput(prompt)
+  return CardFromString(line)
+}
+
+func (b *Board) UpdateCardFromInput() {
+  line := b.GetInput("next")
   b.UpdateCardByString(line)
 }
 
@@ -37,7 +48,13 @@ func (b *Board) UpdateCardByString(line string) {
   x := Must(strconv.Atoi(strings.TrimSpace(l[0])))
   y := Must(strconv.Atoi(strings.TrimSpace(l[1])))
 
-  b.SetPileCard(x, y, CardFromString(l[2]), true)
+  card, ok := CardFromString(l[2])
+  if !ok {
+    fmt.Printf("[WARN] invalid input %s\n", line)
+    return
+  }
+
+  b.SetPileCard(x, y, card, true)
 }
 
 func (b *Board) HasPendingCard() bool {

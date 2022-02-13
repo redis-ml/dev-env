@@ -124,8 +124,12 @@ func CardTypeFromString(line string) CardType {
   return cardTypeMap[cardType]
 }
 
-func CardFromString(line string) Card {
+func CardFromString(line string) (c Card, ok bool) {
   card := strings.TrimSpace(line)
+  if len(card) < 2 {
+    ok = false
+    return
+  }
 
   face := strings.ToUpper(strings.TrimSpace(card[1:]))
   n := -1
@@ -140,5 +144,5 @@ func CardFromString(line string) Card {
   }
 
   cardTypeString := card[0:1]
-  return NewCard(CardTypeFromString(cardTypeString), n)
+  return NewCard(CardTypeFromString(cardTypeString), n), true
 }

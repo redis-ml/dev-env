@@ -27,23 +27,14 @@ func (b *Board) WasteToPile(pileIdx int) (string, UndoFunc, bool) {
   l := len(b.Waste) 
   if l > 0 {
     card := b.Waste[l-1]
-    if b.CanMoveToPile(card, pileIdx) {
-      originalPileLen := len(b.Piles[pileIdx])
-      tmp := NewCard(card.Type, card.Number)
-      newCard := GameCard {
-        Card: &tmp,
-      }
-      newCard.Reveal()
-
-      b.Piles[pileIdx] = append(b.Piles[pileIdx], newCard)
-
+    pileLen := len(b.Piles[pileIdx])
+    if b.AppendCardToPile(card, pileIdx) {
       b.Waste = b.Waste[0:l-1]
 
-
-      move := fmt.Sprintf("waste %s -> (%d, %d)", card, pileIdx, originalPileLen)
+      move := fmt.Sprintf("waste %s -> (%d, %d)", card, pileIdx, pileLen)
       undo := func() {
         b.Waste = append(b.Waste, card)
-        b.Piles[pileIdx] = b.Piles[pileIdx][0:originalPileLen]
+        b.Piles[pileIdx] = b.Piles[pileIdx][0:pileLen]
       }
       return move, undo, true
     }

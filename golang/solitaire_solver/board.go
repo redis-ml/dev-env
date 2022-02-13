@@ -12,6 +12,7 @@ type Board struct {
   Waste []Card
   Piles [][]GameCard
   Scanner *bufio.Scanner
+  CurrentMoves []string
 }
 
 type UndoFunc func()
@@ -119,10 +120,10 @@ func (b *Board) SavePileCardToStack(x int) bool {
    return true
 }
 
-func (b *Board) BorrowFromStack(cardType CardType) (Card, bool) {
-   card, ok := b.Stack[cardType]
-   return card, ok
-}
+// func (b *Board) BorrowFromStack(cardType CardType) (Card, bool) {
+//    card, ok := b.Stack[cardType]
+//    return card, ok
+// }
 
 
 func (b *Board) CanSaveToStack(card Card) bool {
@@ -146,7 +147,6 @@ func (b *Board) MovePiles(x int, y int, toPile int) bool {
 
 func (b *Board) CanMoveToPile(src Card, toPile int) bool {
     if len(b.Piles[toPile]) == 0 {
-      // case 1
       return src.IsK()
     } else {
       dest, _ := b.GetPileTailCard(toPile)
@@ -166,18 +166,37 @@ func (b *Board) CanMovePiles(x int, y int, toPile int) bool {
 func (b *Board) GetPileTailCard(x int) (GameCard, int) {
   for {
     pile := b.Piles[x]
-    y := len(pile) - 1
+    y := len(pile)-1
     card := b.GetPileCard(x, y)
     // Validate card.
     if card.Card == nil {
+      printMoves(b.CurrentMoves)
       b.Print()
-      fmt.Printf("Need to know card at position (%d, %d)\n", x, y)
-      b.UpdateCardFromInput()
-      continue
+      c, ok := b.GetCardFromInput(
+        fmt.Sprintf("Need to know card at position (%d, %d)", x, y),
+      )
+      if !ok {
+        fmt.Printf("invalid input, try again!")
+        continue
+      }
+      card.Card = &c
     }
 
     return card, y
   }
+}
+
+func (b *Board) AppendCardToPile(card Card, i int) bool {
+  if b.CanMoveToPile(card, i) {
+    tmp := NewCard(card.Type, card.Number)
+    newCard := GameCard {
+      Card: &tmp,
+    }
+    newCard.Reveal()
+    b.Piles[i] = append(b.Piles[i], newCard)
+    return true
+  }
+  return false
 }
 
 func (b *Board) GetPileCard(x int, y int) GameCard {

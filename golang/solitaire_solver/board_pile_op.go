@@ -22,16 +22,17 @@ func (b *Board) PileToStack(pileIdx int) (string, UndoFunc, bool) {
       if !prevGameCard.IsRevealed() {
         isNewCardRevealed = true
         prevGameCard.Reveal()
-        b.Piles[srcI][srcJ - 1] = prevGameCard
+        b.Piles[srcI][srcJ-1] = prevGameCard
       }
     }
 
     undo := func() {
+      fmt.Printf("UNDO >>>> %s\n", move)
       if isNewCardRevealed {
         // unreveal
         prevGameCard, _ := b.GetPileTailCard(srcI)
         prevGameCard.Unreveal()
-        b.Piles[srcI][srcJ - 1] = prevGameCard
+        b.Piles[srcI][srcJ-1] = prevGameCard
       }
       b.PopStack(card.Type)
       b.Piles[srcI] = append(b.Piles[srcI], gameCard)
@@ -73,6 +74,7 @@ func (b *Board) PileToPile(x int, y int, dst int) (string, UndoFunc, bool) {
       }
     }
 
+    // [Make Changes] Actually update the piles.
     b.MovePiles(srcI, srcJ, i)
 
     // Now let's get input of the new card.
