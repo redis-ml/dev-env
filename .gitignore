@@ -2,6 +2,10 @@
 *.pyc
 
 /bazel-*
+/dist/
 
 # exceptions
 !.git*
+
+# NoteJS
+**/node_modules/**

@@ -20,6 +20,11 @@ load("//bazel/golang/internal:def.bzl", "bootstrap_golang_rules")
 
 bootstrap_golang_rules()
 
+## Python
+load("//bazel/python:init.bzl", "bootstrap_python_rules")
+
+bootstrap_python_rules()
+
 ##############################################################
 # Load external rules.
 
@@ -41,3 +46,9 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_depe
 go_rules_dependencies()
 
 go_register_toolchains(version = "1.17.6")
+
+## Python
+load("//bazel/python:deps.bzl", "install_all_pip_deps")
+
+install_all_pip_deps()
+
