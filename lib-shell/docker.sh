@@ -39,3 +39,11 @@ function docker_clean_build_cache() {
 }
 
 # docker_mysql
+
+function start_local_docker_registry() {
+  docker run -d -p 5000:5000 --restart=always --name registry registry:2
+}
+
+function start_redis() {
+  docker run -d -p 6379:6379 --restart=always --name redis redis
+}

@@ -36,7 +36,7 @@ function k8s_churn_role() {
 
   local kubectl_cmd="kubectl $context_arg $namespace_arg"
 
-  local all_pods="$($kubectl_cmd get pods | awk "\$1~/^$role-[a-f0-9]+-[a-z0-9]+\$/{printf \" pod/\"\$1;}")"
+  local all_pods="$($kubectl_cmd get pods | awk 'substr($1, 1, length(role))==role&&substr($1, length(role)+1)~/^-[0-9A-Za-z]+-[0-9A-Za-z]+$/&&$3=="Running"{printf " pod/"$1;}' role=$role)"
   echo "$kubectl_cmd delete $all_pods"
   $kubectl_cmd delete $all_pods
 }
@@ -48,10 +48,26 @@ function k8s_search_ip() {
 
 function k8s_ssh() {
   local role="${1?role}"
+
+  # END of common k8s logic.
   local kubectl_cmd="kubectl"
 
+  local k8s_context_arg=${K8S_CONTEXT:-}
+  local k8s_context=""
+  if [ "x${k8s_context_arg}" != "x" ]; then
+    k8s_context="--context=${k8s_context_arg}"
+  fi
+
+  local k8s_namespace_arg=${K8S_NAMESPACE:-}
+  local k8s_namespace=""
+  if [ "x${k8s_namespace_arg}" != "x" ]; then
+    k8s_namespace="--namespace=${k8s_namespace_arg}"
+  fi
+  # END of common k8s logic.
+
   # local all_pods="$($kubectl_cmd get pods | awk "\$1~/^$role-[a-f0-9]+-[a-z0-9]+\$/{printf \" pod/\"\$1;}")"
-  local pod_name="$($kubectl_cmd get pods | awk "\$1~/^$role-[a-f0-9]+-[a-z0-9]+\$/{print \$1}" | head -n 1)"
+  echo "$(echo $kubectl_cmd $k8s_namespace $k8s_context)"
+  local pod_name="$($kubectl_cmd $k8s_namespace $k8s_context get pods | awk 'substr($1, 1, length(role))==role&&substr($1, length(role)+1)~/^-[0-9A-Za-z]+-[0-9A-Za-z]+$/&&$3=="Running"{print $1}' role=$role | head -n 1)"
   echo "pod name: $pod_name"
-  $kubectl_cmd exec -ti "${pod_name}" -- sh
+  $kubectl_cmd $k8s_namespace $k8s_context --container app exec -ti "${pod_name}" -- sh
 }
