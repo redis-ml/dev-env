@@ -8,4 +8,8 @@ def install_all_pip_deps():
      name = "demo_bazel_pip_deps",
      requirements = "//:python/demo_bazel/requirements.txt",
   )
+  pip_install(
+     name = "django_hello_world_pip_deps",
+     requirements = "//:python/demo_bazel/django_hello_world/requirements.txt",
+  )
 

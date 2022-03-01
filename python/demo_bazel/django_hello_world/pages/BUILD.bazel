@@ -1,0 +1,18 @@
+load("@django_hello_world_pip_deps//:requirements.bzl", "requirement")
+
+py_library(
+  name = "pages",
+  srcs = [
+    "admin.py",
+    "apps.py",
+    "__init__.py",
+    "models.py",
+    "tests.py",
+    "urls.py",
+    "views.py",
+  ],
+  deps = [
+     requirement("Django"),
+  ],
+  visibility = ["//visibility:public"],
+)
