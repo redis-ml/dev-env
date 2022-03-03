@@ -1,0 +1,25 @@
+load("//bazel/python:defs.bzl", "pytest_test")
+
+pytest_test(
+    name = "test_larry",
+    srcs = ["solution_test.py"],
+    # imports = ["../larry/"],
+    deps = [
+      ":solution",
+    ],
+)
+
+py_test(
+    name = "solution_test",
+    srcs = ["solution_test.py"],
+    deps = [
+      ":solution",
+    ],
+)
+
+py_library(
+    name = "solution",
+    srcs = ["solution.py"],
+    deps = [
+    ],
+)
