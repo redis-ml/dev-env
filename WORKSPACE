@@ -30,10 +30,16 @@ bootstrap_python_rules()
 
 
 ##  NodeJS
-
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 
 build_bazel_rules_nodejs_dependencies()
+
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories")
+
+node_repositories(
+    node_version = "16.13.2",
+    yarn_version = "1.22.17",
+)
 
 load("//bazel/nodejs/tools:app_deps.bzl", "install_nodejs_app_dependencies")
 
