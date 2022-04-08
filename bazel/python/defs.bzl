@@ -24,5 +24,3 @@ def pytest_test(name, srcs, deps = [], args = [], data = [], **kwargs):
         data = data,
         **kwargs
     )
-
-

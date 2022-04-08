@@ -71,7 +71,7 @@ def _jinja2_generate_impl(ctx):
     command = (
         [
             "set -e;",
-        ] + ["%s %s %s.yaml" % (toolchain.binary_path, im, im) for im in _add_prefix_to_imports(ctx.label, ctx.attr.imports)] +
+        ] + ["%s %s %s.yaml" % (toolchain.binary_path, im, im) for im in _add_prefix_to_imports(ctx.label, ctx.attr.imports)]
     )
 
     outputs = []

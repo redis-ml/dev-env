@@ -5,7 +5,7 @@ pytest_test(
     srcs = ["solution_test.py"],
     # imports = ["../larry/"],
     deps = [
-      ":solution",
+        ":solution",
     ],
 )
 
@@ -13,7 +13,7 @@ py_test(
     name = "solution_test",
     srcs = ["solution_test.py"],
     deps = [
-      ":solution",
+        ":solution",
     ],
 )
 

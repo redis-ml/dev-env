@@ -14,6 +14,7 @@ sass(
 )
 
 ts_project(
+    typescript_package = "@npm_demo_bazel//typescript",
     # Experimental: Start a tsc daemon to watch for changes to make recompiles faster.
     # supports_workers = True,
     # declaration = True,
@@ -21,7 +22,6 @@ ts_project(
         "@npm_demo_bazel//@types",
         "@npm_demo_bazel//csstype",
     ],
-    typescript_package = "@npm_demo_bazel//typescript"
 )
 
 webpack(
@@ -37,8 +37,8 @@ webpack(
     data = [
         "src/index.js",
         "src/styles/index.css",
-        "webpack.config.js",
         "webpack.config.common.js",
+        "webpack.config.js",
         "@npm_demo_bazel//:node_modules",
     ],
 )
