@@ -1,6 +1,6 @@
 {
   // TODO: 'dev-env' should be replaced with ${workspaceFolderBasename}.
-  "go.goroot": "${workspaceFolder}/dist/dev-env/external/go_sdk",
+  "go.goroot": "${workspaceFolder}/bazel-dev-env/external/go_sdk",
   "go.toolsEnvVars": {
     "GOPACKAGESDRIVER": "${workspaceFolder}/ide/vscode/gopackagesdriver.sh"
   },
@@ -13,11 +13,11 @@
       "-bazel-bin",
       "-bazel-out",
       "-bazel-testlogs",
-      "-bazel-mypkg",
+      "-bazel-dev-env",
     ],
     "formatting.gofumpt": true,
-    // "formatting.local": "github.com/my/mypkg",
-    "ui.completion.usePlaceholders": true,
+    "formatting.local": "github.com/redisliu/dev-env",
+    // "ui.completion.usePlaceholders": true,
     "ui.semanticTokens": true,
     "ui.codelenses": {
       "gc_details": false,
@@ -35,5 +35,7 @@
   "go.vetOnSave": "off",
   "editor.tabSize": 4,
   "window.autoDetectColorScheme": true,
-  "search.showLineNumbers": true
+  "search.showLineNumbers": true,
+  "go.delveConfig": {
+  }
 }
