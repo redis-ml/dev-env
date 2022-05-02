@@ -1,26 +1,28 @@
 {
     "private": true,
     "devDependencies": {
-        "@bazel/buildifier": "^4.2.5",
-        "@bazel/ibazel": "^0.15.10",
+        "@bazel/buildifier": "^5.1.0",
+        "@bazel/ibazel": "^0.16.2",
         "@bazel/typescript": "^5.0.2",
-        "@types/react": "^16.9.5",
-        "@types/react-dom": "^16.9.1",
-        "css-loader": "^3.2.0",
-        "csstype": "^2.2.0",
-        "http-server": "^0.11.1",
-        "react": "^16.10.2",
-        "react-dom": "^16.10.2",
+        "@types/react": "^18.0.8",
+        "@types/react-dom": "^18.0.3",
+        "css-loader": "^6.7.1",
+        "csstype": "^3.0.11",
+        "react": "^18.1.0",
+        "react-dom": "^18.1.0",
         "sass": "^1.23.0",
-        "style-loader": "^1.0.0",
-        "typescript": "^3.6.3",
-        "webpack": "^4.41.0",
-        "webpack-cli": "^3.3.9",
-        "webpack-dev-server": "^3.8.2"
+        "style-loader": "^3.3.1",
+        "typescript": "^4.6.4",
+        "webpack": "^5.72.0",
+        "webpack-cli": "^4.9.2",
+        "webpack-dev-server": "^4.8.1"
     },
     "scripts": {
         "yarn": "bazel run @yarn//:bin/yarn",
         "build": "bazel build //...",
         "serve": "ibazel run :server"
+    },
+    "dependencies": {
+        "http-server": "^14.1.0"
     }
 }
