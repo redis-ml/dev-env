@@ -1,5 +1,5 @@
 {
-  // TODO: 'dev-env' should be replaced with ${workspaceFolderBasename}.
+  // This file doesn't work in Linux yet.
   "go.goroot": "${workspaceFolder}/bazel-dev-env/external/go_sdk",
   "go.toolsEnvVars": {
     "GOPACKAGESDRIVER": "${workspaceFolder}/ide/vscode/gopackagesdriver.sh"
@@ -33,9 +33,8 @@
   "go.buildOnSave": "off",
   "go.lintOnSave": "off",
   "go.vetOnSave": "off",
-  "editor.tabSize": 4,
-  "window.autoDetectColorScheme": true,
-  "search.showLineNumbers": true,
-  "go.delveConfig": {
-  }
+  "go.languageServerFlags": [
+
+    "-rpc.trace"
+  ]
 }
