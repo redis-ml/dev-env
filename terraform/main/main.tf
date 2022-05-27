@@ -20,6 +20,6 @@ module "users" {
   source = "./modules/users"
 }
 
-module "dynamodb" {
-  source = "./modules/dynamodb"
+module "service_fanout" {
+  source = "./modules/services/fanout"
 }
