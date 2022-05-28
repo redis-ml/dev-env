@@ -4,10 +4,13 @@ PATH := $(bazelisk run @go_sdk//:bin/go -- env GOROOT)/bin:$(PATH)
 BAZEL := bazelisk
 
 yarn:
-	bazel run @yarn//:bin/yarn --
+	$(BAZEL) run @yarn//:bin/yarn --
 
 go:
-	bazel run @go_sdk//:bin/go --
+	$(BAZEL) run @go_sdk//:bin/go --
+
+gazelle_update_repos:
+	$(BAZEL) run //:gazelle-update-repos
 
 run_yq:
 	go run github.com/mikefarah/yq/v4
