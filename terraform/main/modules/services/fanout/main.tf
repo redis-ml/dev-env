@@ -9,6 +9,12 @@ module "lambda_sqs_fanout" {
 
   for_each = toset(["dev"])
 
+  # provisioned_concurrent_executions = 3
+
+  memory_size = 512
+
+  timeout = 20
+
   function_name = "sqs-fanout-worker-${each.value}"
   description   = "SQS fanout worker"
   # The file name of the binary.
@@ -18,7 +24,6 @@ module "lambda_sqs_fanout" {
 
   create_package         = false
 
-  # local_existing_package = "${path.module}/../../../../../build/fanout/sqsfanoutworker.zip"
   local_existing_package = "${path.root}/../../build/fanout/sqsfanoutworker.zip"
 
 #   source_path = "${path.module}/../fixtures/python3.8-app1"
@@ -29,10 +34,13 @@ module "lambda_sqs_fanout" {
 
 #  artifacts_dir = "${path.root}/.terraform/lambda-builds/"
 
-#  layers = [
+  layers = [
 #    module.lambda_layer_local.lambda_layer_arn,
 #    module.lambda_layer_s3.lambda_layer_arn,
-#  ]
+#    # this fails with /lib64/libc.so.6 GLIBC_2.18 not found.
+#    "arn:aws:lambda:us-west-2:580247275435:layer:LambdaInsightsExtension:18",
+    "arn:aws:lambda:us-west-2:580247275435:layer:LambdaInsightsExtension:14",
+  ]
 
   environment_variables = {
     Hello      = "World"
@@ -45,46 +53,15 @@ module "lambda_sqs_fanout" {
   attach_dead_letter_policy = true
   dead_letter_target_arn    = aws_sqs_queue.dlq.arn
 
-#   attach_policy_json = true
-#   policy_json        = <<EOF
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Effect": "Allow",
-#             "Action": [
-#                 "xray:GetSamplingStatisticSummaries"
-#             ],
-#             "Resource": ["*"]
-#         }
-#     ]
-# }
-# EOF
-# 
-#   attach_policy_jsons = true
-#   policy_jsons = [<<EOF
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Effect": "Allow",
-#             "Action": [
-#                 "xray:*"
-#             ],
-#             "Resource": ["*"]
-#         }
-#     ]
-# }
-# EOF
-#   ]
-#  number_of_policy_jsons = 1
-
   attach_policy = true
   policy        = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 
   attach_policies    = true
-  policies           = ["arn:aws:iam::aws:policy/AWSXrayReadOnlyAccess"]
-  number_of_policies = 1
+  policies           = [
+    "arn:aws:iam::aws:policy/AWSXrayReadOnlyAccess",
+    "arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+  ]
+  number_of_policies = 2
 
   attach_policy_statements = true
   policy_statements = {
@@ -109,7 +86,7 @@ module "lambda_sqs_fanout" {
         "s3:GetBucketLocation",
       ],
       resources = [
-        module.s3_bucket_for_fanout.s3_bucket_arn
+        module.s3_bucket_for_fanout.s3_bucket_arn,
       ]
     },
     s3_rw = {
@@ -120,18 +97,29 @@ module "lambda_sqs_fanout" {
         "s3:GetObject*",
       ],
       resources = [
-        "${module.s3_bucket_for_fanout.s3_bucket_arn}/*"
+        "${module.s3_bucket_for_fanout.s3_bucket_arn}/*",
       ]
     },
     fanout_sqs = {
       effect    = "Allow",
       actions = [
+        "sqs:SendMessage",
         "sqs:ReceiveMessage",
         "sqs:DeleteMessage",
         "sqs:GetQueueAttributes",
       ]
       resources = [
-        aws_sqs_queue.fanout.arn
+        aws_sqs_queue.fanout.arn,
+      ]
+    },
+    sink_sqs = {
+      effect    = "Allow",
+      actions = [
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes",
+      ]
+      resources = [
+        aws_sqs_queue.fanout_sink.arn,
       ]
     },
   }
@@ -161,6 +149,13 @@ resource "aws_sqs_queue" "dlq" {
 
 resource "aws_sqs_queue" "fanout" {
   name = "fanout"
+}
+
+################################################
+# Store the data, mimicking the final consumer.
+
+resource "aws_sqs_queue" "fanout_sink" {
+  name = "fanout-sink"
 }
 
 module "s3_bucket_for_fanout" {
@@ -217,4 +212,16 @@ resource "aws_dynamodb_table" "event" {
   point_in_time_recovery {
     enabled = true
   }
+}
+
+# Subscribe the SQS events to Lambda.
+resource "aws_lambda_event_source_mapping" "fanout" {
+  event_source_arn = aws_sqs_queue.fanout.arn
+
+  enabled = true
+
+  for_each = module.lambda_sqs_fanout
+  function_name    = each.value.lambda_function_arn
+
+  batch_size = 1
 }
