@@ -12,8 +12,8 @@ def fetch_go_mod_deps():
     go_repository(
         name = "com_github_aws_aws_sdk_go",
         importpath = "github.com/aws/aws-sdk-go",
-        sum = "h1:5f7ESFKQv5WHX8m37H2T8G+tc/rggy7sfdZ8ioqXFY8=",
-        version = "v1.44.12",
+        sum = "h1:3nOkwJBJLiGBmJKWp3z0utyXuBkxyGkRRwWjrTItJaY=",
+        version = "v1.44.24",
     )
 
     go_repository(
