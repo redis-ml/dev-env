@@ -39,9 +39,17 @@ install_nodejs_app_dependencies()
 ## Golang
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
-go_rules_dependencies()
+go_register_toolchains(version = "1.18.2")
 
-go_register_toolchains(version = "1.18.1")
+load("//bazel/golang:deps.bzl", "manual_go_deps")
+load("//bazel/golang:generated_deps_from_go_mod.bzl", "fetch_go_mod_deps")
+
+# gazelle:repository_macro bazel/golang/generated_deps_from_go_mod.bzl%fetch_go_mod_deps
+fetch_go_mod_deps()
+
+manual_go_deps()
+
+go_rules_dependencies()
 
 ## Python
 load("//bazel/python:deps.bzl", "install_all_pip_deps")
