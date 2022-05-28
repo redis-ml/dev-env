@@ -11,12 +11,12 @@ go_library(
     importpath = "github.com/redisliu/dev-env/golang/cmd/sqsfanoutworker/handler",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_aws_aws_lambda_go//events:go_default_library",
-        "@com_github_aws_aws_sdk_go//aws:go_default_library",
-        "@com_github_aws_aws_sdk_go//aws/awserr:go_default_library",
-        "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
-        "@com_github_aws_aws_sdk_go//service/dynamodb:go_default_library",
-        "@com_github_aws_aws_sdk_go//service/sqs:go_default_library",
+        "@com_github_aws_aws_lambda_go//events",
+        "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//aws/awserr",
+        "@com_github_aws_aws_sdk_go//aws/session",
+        "@com_github_aws_aws_sdk_go//service/dynamodb",
+        "@com_github_aws_aws_sdk_go//service/sqs",
     ],
 )
 

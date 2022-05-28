@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "solitaire_solver",
+    srcs = [
+        "board.go",
+        "board_input.go",
+        "board_pile_op.go",
+        "board_stack_op.go",
+        "board_stock_op.go",
+        "board_waste_op.go",
+        "driver.go",
+        "model.go",
+        "util.go",
+    ],
+    importpath = "github.com/redisliu/dev-env/golang/solitaire_solver",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "solitaire_solver_test",
+    srcs = [
+        "base_board_test.go",
+        "board_pile_op_test.go",
+        "board_waste_op_test.go",
+    ],
+    deps = [":solitaire_solver"],
+)
