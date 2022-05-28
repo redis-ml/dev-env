@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "handler",
+    srcs = [
+        "aws_util.go",
+        "handle_sink.go",
+        "handle_split.go",
+        "handler.go",
+    ],
+    importpath = "github.com/redisliu/dev-env/golang/cmd/sqsfanoutworker/handler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_aws_aws_lambda_go//events:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/awserr:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/dynamodb:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/sqs:go_default_library",
+    ],
+)
+
+go_test(
+    name = "handler_test",
+    srcs = ["handle_split_test.go"],
+    deps = [":handler"],
+)

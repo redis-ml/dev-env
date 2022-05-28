@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "localsqsfanout_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/redisliu/dev-env/golang/cmd/sqsfanoutworker/localsqsfanout",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//golang/cmd/sqsfanoutworker/handler",
+        "@com_github_aws_aws_lambda_go//events:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "localsqsfanout",
+    embed = [":localsqsfanout_lib"],
+    visibility = ["//visibility:public"],
+)
