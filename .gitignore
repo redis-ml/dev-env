@@ -4,6 +4,7 @@
 
 /bazel-*
 /dist/
+/build/
 
 # exceptions
 !.git*
