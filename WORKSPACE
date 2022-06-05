@@ -8,6 +8,14 @@ workspace(
 )
 
 ##############################################################
+# Global config: versions
+NODE_VERSION = "16.13.2"
+YARN_VERSION = "1.22.17"
+
+GOLANG_VERSION = "1.18.3"
+
+
+##############################################################
 # Bootstrapping rules.
 # - Download rules
 # - Fetch bootstrapping dependencies.
@@ -28,8 +36,8 @@ build_bazel_rules_nodejs_dependencies()
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories")
 
 node_repositories(
-    node_version = "16.13.2",
-    yarn_version = "1.22.17",
+    node_version=NODE_VERSION,
+    yarn_version=YARN_VERSION,
 )
 
 load("//bazel/nodejs/tools:app_deps.bzl", "install_nodejs_app_dependencies")
@@ -39,7 +47,7 @@ install_nodejs_app_dependencies()
 ## Golang
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
-go_register_toolchains(version = "1.18.2")
+go_register_toolchains(version=GOLANG_VERSION)
 
 load("//bazel/golang:deps.bzl", "manual_go_deps")
 load("//bazel/golang:generated_deps_from_go_mod.bzl", "fetch_go_mod_deps")
