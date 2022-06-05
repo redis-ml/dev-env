@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "learning_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/redisliu/dev-env/golang/learning",
+    visibility = ["//visibility:private"],
+    deps = ["//golang/pkg/dynamodemo"],
+)
+
+go_binary(
+    name = "learning",
+    embed = [":learning_lib"],
+    visibility = ["//visibility:public"],
+)
