@@ -1,5 +1,4 @@
 {
-  // This file doesn't work in Linux yet.
   "go.goroot": "${workspaceFolder}/bazel-dev-env/external/go_sdk",
   "go.toolsEnvVars": {
     "GOPACKAGESDRIVER": "${workspaceFolder}/ide/vscode/gopackagesdriver.sh"
