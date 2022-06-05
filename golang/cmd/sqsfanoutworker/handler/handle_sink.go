@@ -64,7 +64,7 @@ func checkIdempotency(ctx context.Context, commEvent *CommEvent) (exists bool, e
 		return false, nil
 	}
 
-	ddbClient := newDdbClient()
+	ddbClient := getDdbClient()
 	_, err = ddbClient.PutItemWithContext(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
 		Item: map[string]*dynamodb.AttributeValue{
@@ -106,7 +106,7 @@ func sendToSinkSqs(ctx context.Context, evt *CommEvent) error {
 		return nil
 	}
 
-	sqsClient := newSQSClient()
+	sqsClient := getSQSClient()
 	_, err = sqsClient.SendMessageWithContext(ctx, &sqs.SendMessageInput{
 		MessageBody: aws.String(string(msg)),
 		QueueUrl:    aws.String(sinkQueueURL),

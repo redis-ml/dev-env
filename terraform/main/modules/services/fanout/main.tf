@@ -9,7 +9,7 @@ module "lambda_sqs_fanout" {
 
   for_each = toset(["dev"])
 
-  # provisioned_concurrent_executions = 3
+  provisioned_concurrent_executions = 10
 
   memory_size = 512
 
@@ -100,6 +100,17 @@ module "lambda_sqs_fanout" {
         "${module.s3_bucket_for_fanout.s3_bucket_arn}/*",
       ]
     },
+    handle_fanout_input_sqs = {
+      effect    = "Allow",
+      actions = [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes",
+      ]
+      resources = [
+        aws_sqs_queue.fanout_input.arn,
+      ]
+    },
     fanout_sqs = {
       effect    = "Allow",
       actions = [
@@ -146,6 +157,10 @@ resource "aws_sqs_queue" "dlq" {
 
 ###############################################################################################################
 # Fanout used
+
+resource "aws_sqs_queue" "fanout_input" {
+  name = "fanout-input"
+}
 
 resource "aws_sqs_queue" "fanout" {
   name = "fanout"
@@ -216,6 +231,18 @@ resource "aws_dynamodb_table" "event" {
 
 # Subscribe the SQS events to Lambda.
 resource "aws_lambda_event_source_mapping" "fanout" {
+  event_source_arn = aws_sqs_queue.fanout_input.arn
+
+  enabled = true
+
+  for_each = module.lambda_sqs_fanout
+  function_name    = each.value.lambda_function_arn
+
+  batch_size = 1
+}
+
+# Subscribe the SQS events to Lambda.
+resource "aws_lambda_event_source_mapping" "fanout_spawn" {
   event_source_arn = aws_sqs_queue.fanout.arn
 
   enabled = true

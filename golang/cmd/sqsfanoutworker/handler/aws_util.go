@@ -13,6 +13,28 @@ import (
 )
 
 var awsSessionStore atomic.Value
+var awsSqsClientStore atomic.Value
+var awsDdbClientStore atomic.Value
+
+func getSQSClient() *sqs.SQS {
+	svc, ok := awsSqsClientStore.Load().(*sqs.SQS)
+	if ok {
+		return svc
+	}
+	svc = newSQSClient()
+	awsSqsClientStore.Store(svc)
+	return svc
+}
+
+func getDdbClient() *dynamodb.DynamoDB {
+	svc, ok := awsDdbClientStore.Load().(*dynamodb.DynamoDB)
+	if ok {
+		return svc
+	}
+	svc = newDdbClient()
+	awsDdbClientStore.Store(svc)
+	return svc
+}
 
 func newSQSClient() *sqs.SQS {
 	return sqs.New(getAwsSession())
@@ -68,8 +90,4 @@ func getAwsSession() *session.Session {
 func newAwsSession() (*session.Session, error) {
 	awsConfig := aws.NewConfig().WithRegion("us-west-2")
 	return session.NewSession(awsConfig)
-}
-
-func SetDebugMode(debug bool) {
-	isDebugMode = debug
 }

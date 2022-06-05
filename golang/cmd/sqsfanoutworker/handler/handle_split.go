@@ -16,8 +16,6 @@ const (
 	ProducerBatchSize = 10
 )
 
-var isDebugMode = false
-
 type FileSubset struct {
 	ObjectLocation string `json:"object_location,omitempty"`
 	ObjectSize     int64  `json:"object_size,omitempty"`
@@ -88,7 +86,7 @@ func scheduleSubTask(ctx context.Context, tasks []TaskSplit) error {
 		return nil
 	}
 
-	sqsClient := newSQSClient()
+	sqsClient := getSQSClient()
 
 	entries := resetEntries()
 	for i, payload := range payloads {

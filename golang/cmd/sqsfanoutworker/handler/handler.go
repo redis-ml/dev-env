@@ -11,10 +11,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-const (
-	queueURL = "https://us-west-2.queue.amazonaws.com/097605708335/fanout"
-)
-
 func HandleRequest(ctx context.Context, eventList events.SQSEvent) (string, error) {
 	start := time.Now()
 
@@ -106,6 +102,10 @@ func instantiatecommEvent(ctx context.Context, task *TaskSplit, id string) (comm
 func handleSingleEvent(ctx context.Context, evt *CommEvent) error {
 	if isDebugMode {
 		fmt.Printf("[DEBUG] handle event: %+v\n", evt)
+		if isFakeSinkMode {
+			fmt.Println("[DEBUG] returning without doing anything since in fake-sink mode")
+			return nil
+		}
 	}
 
 	// Mimic Idempotentcy checking.

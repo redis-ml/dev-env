@@ -28,9 +28,10 @@ test_fanout:
 	aws lambda invoke --function-name sqs-fanout-worker-dev --payload file://data/examples/sqs/lambda-fanout-leaf.json  --cli-binary-format raw-in-base64-out /dev/stdout
 
 sqs_receive:
+	# QUEUE_URL = https://us-west-2.queue.amazonaws.com/097605708335/fanout-input
+	# or
 	# QUEUE_URL = https://us-west-2.queue.amazonaws.com/097605708335/fanout
 	aws sqs receive-message --queue-url $(QUEUE_URL)
 
 scan_fanout_ddb:
-	# QUEUE_URL = https://us-west-2.queue.amazonaws.com/097605708335/fanout
 	aws dynamodb scan --table-name "CommEvent"
