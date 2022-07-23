@@ -9,7 +9,7 @@ module "lambda_sqs_fanout" {
 
   for_each = toset(["dev"])
 
-  provisioned_concurrent_executions = 10
+  # provisioned_concurrent_executions = 10
 
   memory_size = 512
 
@@ -76,7 +76,10 @@ module "lambda_sqs_fanout" {
         "dynamodb:Query",
         "dynamodb:BatchWriteItem",
       ],
-      resources = [aws_dynamodb_table.event.arn]
+      resources = [
+        aws_dynamodb_table.event.arn,
+        aws_dynamodb_table.notification_preference.arn,
+      ]
     },
     s3_list_bucket = {
       effect    = "Allow",

@@ -6,7 +6,7 @@ QUEUE_URL="${BASE_QUEUE_URL}-input"
 
 set -e
 TS="$(date +%s)"
-MSG="{\"start\":0,\"end\":100000,\"payload\":{\"po_box\":\"my_test\"},\"event_id\":\"event-${TS}\"}"
+MSG="{\"start\":900000,\"end\":1600000,\"payload\":{\"po_box\":\"my_test\"},\"event_id\":\"event-${TS}\"}"
 
 aws sqs send-message \
   --queue-url "${QUEUE_URL}" \
