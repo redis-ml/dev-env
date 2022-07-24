@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/redisliu/dev-env/golang/util/awsutil"
 )
 
 const (
@@ -86,7 +87,7 @@ func scheduleSubTask(ctx context.Context, tasks []TaskSplit) error {
 		return nil
 	}
 
-	sqsClient := getSQSClient()
+	sqsClient := awsutil.GetSQSClient()
 
 	entries := resetEntries()
 	for i, payload := range payloads {

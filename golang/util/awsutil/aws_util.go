@@ -1,4 +1,4 @@
-package handler
+package awsutil
 
 import (
 	"log"
@@ -12,11 +12,15 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 )
 
-var awsSessionStore atomic.Value
-var awsSqsClientStore atomic.Value
-var awsDdbClientStore atomic.Value
+var IsDebugMode bool
 
-func getSQSClient() *sqs.SQS {
+var (
+	awsSessionStore   atomic.Value
+	awsSqsClientStore atomic.Value
+	awsDdbClientStore atomic.Value
+)
+
+func GetSQSClient() *sqs.SQS {
 	svc, ok := awsSqsClientStore.Load().(*sqs.SQS)
 	if ok {
 		return svc
@@ -26,7 +30,7 @@ func getSQSClient() *sqs.SQS {
 	return svc
 }
 
-func getDdbClient() *dynamodb.DynamoDB {
+func GetDdbClient() *dynamodb.DynamoDB {
 	svc, ok := awsDdbClientStore.Load().(*dynamodb.DynamoDB)
 	if ok {
 		return svc
@@ -42,10 +46,6 @@ func newSQSClient() *sqs.SQS {
 
 func newDdbClient() *dynamodb.DynamoDB {
 	return dynamodb.New(getAwsSession())
-}
-
-func val() *dynamodb.AttributeValue {
-	return &dynamodb.AttributeValue{}
 }
 
 func getAwsSession() *session.Session {
@@ -72,7 +72,7 @@ func getAwsSession() *session.Session {
 	}
 	if !ok || sess == nil {
 		if sess == nil {
-			if isDebugMode {
+			if IsDebugMode {
 				log.Println("session is nil, creating new one...")
 			}
 		}

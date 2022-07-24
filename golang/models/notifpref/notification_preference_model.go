@@ -8,11 +8,16 @@ const (
 
 	// Instrument Preferences
 	ColInstrPref = "InstrPref"
-	// Shared columes
+	// Shared columes used in this row.
 	// - ColTHld
 	// - ColUpdatedAt
 
-	// Shared keys
+	// Shared columnes used by any row.
 	ColThld      = "Thld"
 	ColUpdatedAt = "UpdatedAt"
+)
+
+const (
+	// PrefType enums.
+	PrefTypePriceAbove = "PriceAbove"
 )

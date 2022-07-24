@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	. "github.com/redisliu/dev-env/golang/util/awsutil"
 )
 
 const (
@@ -64,18 +65,18 @@ func checkIdempotency(ctx context.Context, commEvent *CommEvent) (exists bool, e
 		return false, nil
 	}
 
-	ddbClient := getDdbClient()
+	ddbClient := GetDdbClient()
 	_, err = ddbClient.PutItemWithContext(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
 		Item: map[string]*dynamodb.AttributeValue{
-			hashKeyOwner:    val().SetS(fmt.Sprintf("test:fanout:" + commEvent.Owner)),
-			rangeKeyEventID: val().SetS(commEvent.EventID),
+			hashKeyOwner:    DdbVal().SetS(fmt.Sprintf("test:fanout:" + commEvent.Owner)),
+			rangeKeyEventID: DdbVal().SetS(commEvent.EventID),
 
-			colCreatedAt: val().SetS(now.Format(time.RFC3339)),
-			colTTL:       val().SetN(ttlVal(now.Add(30 * 24 * time.Hour))),
+			colCreatedAt: DdbVal().SetS(now.Format(time.RFC3339)),
+			colTTL:       DdbVal().SetN(ttlVal(now.Add(30 * 24 * time.Hour))),
 
-			colPoBox:      val().SetS(commEvent.PoBox),
-			colCampaignID: val().SetS(commEvent.CampaignID),
+			colPoBox:      DdbVal().SetS(commEvent.PoBox),
+			colCampaignID: DdbVal().SetS(commEvent.CampaignID),
 		},
 		ConditionExpression: aws.String("attribute_not_exists(#hashKeyOwner) AND attribute_not_exists(#rangeKeyEventID)"),
 		ExpressionAttributeNames: map[string]*string{
@@ -106,7 +107,7 @@ func sendToSinkSqs(ctx context.Context, evt *CommEvent) error {
 		return nil
 	}
 
-	sqsClient := getSQSClient()
+	sqsClient := GetSQSClient()
 	_, err = sqsClient.SendMessageWithContext(ctx, &sqs.SendMessageInput{
 		MessageBody: aws.String(string(msg)),
 		QueueUrl:    aws.String(sinkQueueURL),
