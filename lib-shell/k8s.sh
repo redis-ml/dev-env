@@ -1,5 +1,5 @@
-# if [ "$MY_LIB_K8S_DEFINED" = "" ]; then
-#   export MY_LIB_K8S_DEFINED=1
+# if [ "$MY_LIB_KUBE_DEFINED" = "" ]; then
+#   export MY_LIB_KUBE_DEFINED=1
 #   source "$(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh"
 #   # export PS1='$(kube_ps1)'$PS1
 # fi
@@ -22,13 +22,13 @@ function k8s_churn_role() {
   local role=${1?role}
   shift
 
-  local context=${K8S_CONTEXT:-}
+  local context=${KUBE_CONTEXT:-}
   local context_arg=""
   if [ "$context" != "" ]; then
     context_arg="--context=$context"
   fi
 
-  local namespace=${K8S_NAMESPACE:-}
+  local namespace=${KUBE_NAMESPACE:-}
   local namespace_arg=""
   if [ "$namespace" != "" ]; then
     namespace_arg="--namespace=$namespace"
@@ -52,13 +52,13 @@ function k8s_ssh() {
   # END of common k8s logic.
   local kubectl_cmd="kubectl"
 
-  local k8s_context_arg=${K8S_CONTEXT:-}
+  local k8s_context_arg=${KUBE_CONTEXT:-}
   local k8s_context=""
   if [ "x${k8s_context_arg}" != "x" ]; then
     k8s_context="--context=${k8s_context_arg}"
   fi
 
-  local k8s_namespace_arg=${K8S_NAMESPACE:-}
+  local k8s_namespace_arg=${KUBE_NAMESPACE:-}
   local k8s_namespace=""
   if [ "x${k8s_namespace_arg}" != "x" ]; then
     k8s_namespace="--namespace=${k8s_namespace_arg}"
