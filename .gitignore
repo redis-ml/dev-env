@@ -2,7 +2,10 @@
 !.vscode
 *.pyc
 
-/bazel-*
+**/bazel-bin
+**/bazel-out
+**/bazel-testlogs
+**/bazel-*
 /dist/
 /build/
 
