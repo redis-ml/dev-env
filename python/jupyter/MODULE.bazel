@@ -1,0 +1,35 @@
+module(
+    name = "jupyter",
+    compatibility_level = 1,
+    version = "0.0.0",
+)
+
+# TODO: migrate to registry module when ready.
+bazel_dep(name = "rules_python", version = "0.0.0")
+git_override(
+    module_name = "rules_python",
+    remote = "git@github.com:bazelbuild/rules_python.git",
+    commit = "24a8b7460d03b7719d82a2ddfea794a0da4ac38d",
+)
+
+python = use_extension("@rules_python//python:extensions.bzl", "python")
+
+python.toolchain(
+    name = "python3_9",
+    python_version = "3.9",
+)
+
+use_repo(python, "python3_9_toolchains")
+
+register_toolchains(
+    "@python3_9_toolchains//:all",
+)
+
+pip = use_extension("@rules_python//python:extensions.bzl", "pip")
+
+pip.parse(
+    name = "pip",
+    requirements_lock = "//:requirements_lock.txt",
+)
+
+use_repo(pip, "pip")
