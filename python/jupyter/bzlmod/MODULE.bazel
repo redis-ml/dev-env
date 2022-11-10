@@ -32,4 +32,13 @@ pip.parse(
     requirements_lock = "//:requirements_lock.txt",
 )
 
+pip.parse(
+    name = "pip_prometheus_client",
+    requirements_lock = "//:requirements_lock.txt",
+)
+pip.parse(
+    name = "pip_argon2_cffi",
+    requirements_lock = "//:requirements_lock.txt",
+)
+
 use_repo(pip, "pip")

@@ -1,7 +1,7 @@
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
-load("@pip_jupyter_deps//:requirements.bzl", "requirement")
+load("@pip//:requirements.bzl", "requirement")
 
 compile_pip_requirements(
     name = "requirements",
@@ -19,7 +19,7 @@ py_library(
 )
 
 py_binary(
-    name = "jupyter",
+    name = "bzlmod",
     srcs = ["__main__.py"],
     main = "__main__.py",
     visibility = ["//:__subpackages__"],

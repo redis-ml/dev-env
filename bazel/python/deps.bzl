@@ -15,3 +15,7 @@ def install_all_pip_deps():
         name = "django_hello_world_pip_deps",
         requirements = "//:python/demo_bazel/django_hello_world/requirements.txt",
     )
+    pip_install(
+        name = "pip_jupyter_deps",
+        requirements = "//python/jupyter:requirements_lock.txt",
+    )
