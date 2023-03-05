@@ -1,0 +1,2 @@
+This code is copied from https://github.com/bazelbuild/rules_python/tree/main/examples/bzlmod with slight code changes:
+- Switch to registry instead of overwritting to local repo.
