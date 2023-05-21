@@ -1,4 +1,12 @@
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@demo_bazel_pip_deps//:requirements.bzl", "requirement")
+
+compile_pip_requirements(
+    name = "requirements",
+    extra_args = ["--allow-unsafe"],
+    requirements_in = "requirements.in",
+    requirements_txt = "requirements_lock.txt",
+)
 
 py_binary(
     name = "main",

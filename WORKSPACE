@@ -14,6 +14,9 @@ YARN_VERSION = "1.22.17"
 
 GOLANG_VERSION = "1.18.3"
 
+# See https://github.com/bazelbuild/rules_python/blob/main/python/versions.bzl
+PYTHON_VERSION = "3.10.6"
+
 
 ##############################################################
 # Bootstrapping rules.
@@ -60,9 +63,20 @@ manual_go_deps()
 go_rules_dependencies()
 
 ## Python
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+
+python_register_toolchains(
+    name = "python3_10",
+    # Available versions are listed in @rules_python//python:versions.bzl.
+    # We recommend using the same version your team is already standardized on.
+    python_version = PYTHON_VERSION,
+)
+
 load("//bazel/python:deps.bzl", "install_all_pip_deps")
 
 install_all_pip_deps()
+
+
 
 ###############################################################
 # Bootstrap secondary rules.

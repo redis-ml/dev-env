@@ -56,12 +56,11 @@ def fetch_external_rules():
 
     # Python
     http_archive(
-        name = "rules_python",
-        sha256 = "a30abdfc7126d497a7698c29c46ea9901c6392d6ed315171a6df5ce433aa4502",
-        strip_prefix = "rules_python-0.6.0",
-        url = "https://github.com/bazelbuild/rules_python/archive/0.6.0.tar.gz",
-    )
-
+      name = "rules_python",
+      sha256 = "8c8fe44ef0a9afc256d1e75ad5f448bb59b81aba149b8958f02f7b3a98f5d9b4",
+      strip_prefix = "rules_python-0.13.0",
+      url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.13.0.tar.gz",
+)
     ########################
     # Example of an "unreleased version"
     # For details, check https://github.com/bazelbuild/rules_python .
