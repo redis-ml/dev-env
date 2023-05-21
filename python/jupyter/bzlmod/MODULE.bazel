@@ -9,35 +9,26 @@ bazel_dep(name = "rules_python", version = "0.0.0")
 git_override(
     module_name = "rules_python",
     remote = "git@github.com:bazelbuild/rules_python.git",
-    commit = "24a8b7460d03b7719d82a2ddfea794a0da4ac38d",
+    commit = "00545742ad2450863aeb82353d4275a1e5ed3f24",
 )
 
 python = use_extension("@rules_python//python:extensions.bzl", "python")
 
 python.toolchain(
-    name = "python3_9",
-    python_version = "3.9",
+    name = "python3_10",
+    python_version = "3.10",
 )
 
-use_repo(python, "python3_9_toolchains")
+use_repo(python, "python3_10_toolchains")
 
 register_toolchains(
-    "@python3_9_toolchains//:all",
+    "@python3_10_toolchains//:all",
 )
 
 pip = use_extension("@rules_python//python:extensions.bzl", "pip")
 
 pip.parse(
     name = "pip",
-    requirements_lock = "//:requirements_lock.txt",
-)
-
-pip.parse(
-    name = "pip_prometheus_client",
-    requirements_lock = "//:requirements_lock.txt",
-)
-pip.parse(
-    name = "pip_argon2_cffi",
     requirements_lock = "//:requirements_lock.txt",
 )
 
