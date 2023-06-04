@@ -1,0 +1,61 @@
+# File architecture
+# - Common section 1: currently only the "http_archive" rule.
+# - Common section 2: http_archive rules.
+# - Setup Golang & Gazelle.
+# - Setup other languages. For each lanuage:
+#   - Setup launage.
+#   - install launage dependencies.
+#   - Setup Gazelle plugin for other languages.
+
+
+# Common section 1
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+
+## rules_go
+http_archive(
+    name = "io_bazel_rules_go",
+    sha256 = "6dc2da7ab4cf5d7bfc7c949776b1b7c733f05e56edc4bcd9022bb249d2e2a996",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
+    ],
+)
+
+## rules_bazel_gazelle.
+http_archive(
+    name = "bazel_gazelle",
+    sha256 = "727f3e4edd96ea20c29e8c2ca9e8d2af724d8c7778e7923a854b2c80952bc405",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz",
+    ],
+)
+
+
+# Language setup
+
+# High priority language:
+# - Golang
+# - Gazelle plugin initialization
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+
+############################################################
+# Define your own dependencies here using go_repository.
+# Else, dependencies declared by rules_go/gazelle will be used.
+# The first declaration of an external repository "wins".
+############################################################
+
+# The following directive does not work yet.
+# gazelle:repository_macro bazel/go_repo.bzl%go_deps
+
+load("//:bazel/go_repo.bzl", _go_deps = "go_deps")
+_go_deps()
+
+go_rules_dependencies()
+
+go_register_toolchains(version = "1.20.4")
+
+gazelle_dependencies()
+

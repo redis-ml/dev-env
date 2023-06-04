@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+# github.com/redis-ml/dev-env/examples/bazel/golang/glog/glog
+
+# load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/redis-ml/dev-env/examples/bazel/golang/glog/glog
+# gazelle(name = "gazelle")
+
+go_library(
+    name = "glog_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/redis-ml/dev-env/examples/bazel/golang/glog/glog",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@com_github_golang_glog//:go_default_library",
+        "@com_github_spyzhov_ajson//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "glog",
+    embed = [":glog_lib"],
+    visibility = ["//visibility:public"],
+)

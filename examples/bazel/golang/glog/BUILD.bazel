@@ -1,0 +1,14 @@
+# Initialize Gazelle
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/redis-ml/dev-env/examples/bazel/golang/glog
+# gazelle(name = "gazelle")
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=bazel/go_repo.bzl%go_deps",
+        "-prune",
+    ],
+    command = "update-repos",
+)
