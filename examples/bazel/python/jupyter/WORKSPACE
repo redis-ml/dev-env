@@ -12,23 +12,42 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 
+###################################
+# Section for updating rules
+
+# https://github.com/bazelbuild/rules_go/releases/tag/v0.41.0
+# https://github.com/bazelbuild/bazel-gazelle
+_RULES_GO_SHA256 = "278b7ff5a826f3dc10f04feaf0b70d48b68748ccd512d7f98bf442077f043fe3"
+_RULES_GO_VERSION = "v0.41.0"
+
+_RULES_BAZEL_GAZELLE_SHA256 = "d3fa66a39028e97d76f9e2db8f1b0c11c099e8e01bf363a923074784e451f809"
+_RULES_BAZEL_GAZELLE_VERSION = "v0.33.0"
+
+# https://github.com/bazelbuild/rules_python/releases/tag/0.25.0
+_RULES_PYTHON_SHA256 = "5868e73107a8e85d8f323806e60cad7283f34b32163ea6ff1020cf27abef6036"
+_RULES_PYTHON_VERSION = "0.25.0"
+
+_RULES_PYTHON_GAZELLE_PLUGIN_SHA256 = "5868e73107a8e85d8f323806e60cad7283f34b32163ea6ff1020cf27abef6036"
+_RULES_PYTHON_GAZELLE_PLUGIN_VERSION = "0.25.0"
+###################################
+
 ## rules_go
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "6dc2da7ab4cf5d7bfc7c949776b1b7c733f05e56edc4bcd9022bb249d2e2a996",
+    sha256 = _RULES_GO_SHA256,
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/{version}/rules_go-{version}.zip".format(version=_RULES_GO_VERSION),
+        "https://github.com/bazelbuild/rules_go/releases/download/{version}/rules_go-{version}.zip".format(version=_RULES_GO_VERSION),
     ],
 )
 
 ## rules_bazel_gazelle.
 http_archive(
     name = "bazel_gazelle",
-    sha256 = "727f3e4edd96ea20c29e8c2ca9e8d2af724d8c7778e7923a854b2c80952bc405",
+    sha256 = _RULES_BAZEL_GAZELLE_SHA256,
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/{version}/bazel-gazelle-{version}.tar.gz".format(version=_RULES_BAZEL_GAZELLE_VERSION),
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/{version}/bazel-gazelle-{version}.tar.gz".format(version=_RULES_BAZEL_GAZELLE_VERSION),
     ],
 )
 
@@ -36,16 +55,16 @@ http_archive(
 ## Lang:Python
 http_archive(
     name = "rules_python",
-    sha256 = "863ba0fa944319f7e3d695711427d9ad80ba92c6edd0b7c7443b84e904689539",
-    strip_prefix = "rules_python-0.22.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.22.0/rules_python-0.22.0.tar.gz",
+    sha256 = _RULES_PYTHON_SHA256,
+    strip_prefix = "rules_python-{version}".format(version=_RULES_PYTHON_VERSION),
+    url = "https://github.com/bazelbuild/rules_python/releases/download/{version}/rules_python-{version}.tar.gz".format(version=_RULES_PYTHON_VERSION),
 )
 ## Lang:Gazelle-Python-Plugin
 http_archive(
     name = "rules_python_gazelle_plugin",
-    sha256 = "863ba0fa944319f7e3d695711427d9ad80ba92c6edd0b7c7443b84e904689539",
-    strip_prefix = "rules_python-0.22.0/gazelle",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.22.0/rules_python-0.22.0.tar.gz",
+    sha256 = _RULES_PYTHON_GAZELLE_PLUGIN_SHA256,
+    strip_prefix = "rules_python-{version}/gazelle".format(version=_RULES_PYTHON_GAZELLE_PLUGIN_VERSION),
+    url = "https://github.com/bazelbuild/rules_python/releases/download/{version}/rules_python-{version}.tar.gz".format(version=_RULES_PYTHON_GAZELLE_PLUGIN_VERSION),
 )
 
 # Language setup
@@ -64,8 +83,10 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 go_rules_dependencies()
 
-go_register_toolchains(version = "1.20.4")
+go_register_toolchains(version = "1.20.5")
 
+# Use this if using WORKSPACE.bazel
+# gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
 gazelle_dependencies()
 
 # Regular priority setup.

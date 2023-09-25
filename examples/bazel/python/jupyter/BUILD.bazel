@@ -1,0 +1,7 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# TODO: update this to relevant path.
+# gazelle:prefix github.com/example/project
+# Run gazelle with: 
+#  bazel run //:gazelle
+gazelle(name = "gazelle")
