@@ -1,29 +1,22 @@
-load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
-load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@pip//:requirements.bzl", "requirement")
 
-load("@my_pip//:requirements.bzl", "requirement")
-
-compile_pip_requirements(
-    name = "requirements",
-    extra_args = ["--allow-unsafe"],
-    requirements_in = "requirements.in",
-    requirements_txt = "requirements_lock.txt",
-)
+# gazelle:ignore notebook.notebookapp.main
 
 py_library(
-    name = "lib",
+    name = "jupyter-run-lib",
     srcs = ["__init__.py"],
-    deps = [
-        requirement("notebook"),
-    ],
+    visibility = ["//:__subpackages__"],
+    deps = [requirement("notebook")],
 )
 
 py_binary(
-    name = "jupyter-run",
+    name = "jupyter",
     srcs = ["__main__.py"],
     main = "__main__.py",
     visibility = ["//:__subpackages__"],
     deps = [
         requirement("notebook"),
+        requirement("numpy"),
     ],
 )
